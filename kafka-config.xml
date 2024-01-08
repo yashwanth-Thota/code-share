@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:kafka="http://www.springframework.org/schema/kafka"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/kafka
+        http://www.springframework.org/schema/kafka/spring-kafka.xsd">
+
+    <bean id="kafkaProducerFactory" class="org.springframework.kafka.core.DefaultKafkaProducerFactory">
+        <constructor-arg>
+            <map>
+                <entry key="bootstrap.servers" value="${kafka.bootstrap-servers}" />
+                </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="kafkaTemplate" class="org.springframework.kafka.core.KafkaTemplate">
+        <constructor-arg ref="kafkaProducerFactory" />
+    </bean>
+
+    <bean id="kafkaConsumerFactory" class="org.springframework.kafka.core.DefaultKafkaConsumerFactory">
+        <constructor-arg>
+            <map>
+                <entry key="bootstrap.servers" value="${kafka.bootstrap-servers}" />
+                <entry key="group.id" value="${kafka.consumer.group-id}" />
+                </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="kafkaListenerContainerFactory"
+          class="org.springframework.kafka.listener.ConcurrentMessageListenerContainer">
+        <constructor-arg ref="kafkaConsumerFactory" />
+        </bean>
+
+</beans>
